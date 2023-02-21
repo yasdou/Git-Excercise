@@ -18,7 +18,7 @@
 - of the shelf AWS Solutions (Amazon Elastic Kubernetes Service)
     - Develop the Backend locally and when pushed to production it´s the same execution environment
 - AWS IoT Greengrass
-    -     service running on the scooter communicating with cloud when needed and tells Tier when the battery should be swapped
+    - service running on the scooter communicating with cloud when needed and tells Tier when the battery should be swapped
 
 ## Result 
 > “This results in all kinds of side benefits for the customer, such as better prices, more scooters, and higher availability,”
