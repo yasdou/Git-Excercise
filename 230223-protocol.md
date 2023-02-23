@@ -1,0 +1,1 @@
+![Protokoll](images/first%20week%20till-2023-02-20-0853.png)
