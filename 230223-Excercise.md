@@ -1,0 +1,3 @@
+- Q1: IAM -> Security, Identity and Compliance
+- Q2: Amazon VPC -> Networking and Contentdelivery
+- Q3: Subnets exist at the level of Availibilty Zones
