@@ -18,7 +18,7 @@ jobs:
         with:
           aws-access-key-id: ASIA4VT4N2G6ONG6RJEK
           aws-secret-access-key: LgvoQXu2F7yI7hkJetE+2AhQfFESmt6vcd94+pzi
-          aws-region: us-east-1
+          aws-region: us-west-2
 
       - name: Upload index.html to S3 bucket
         run: |
