@@ -16,8 +16,8 @@ jobs:
         args: --acl public-read --follow-symlinks --delete
       env:
         AWS_S3_BUCKET: neuefische1234567
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+        AWS_ACCESS_KEY_ID: ASIA4VT4N2G6ONG6RJEK
+        AWS_SECRET_ACCESS_KEY: LgvoQXu2F7yI7hkJetE+2AhQfFESmt6vcd94+pzi
+        AWS_SESSION_TOKEN: FwoGZXIvYXdzEML//////////wEaDBHGfM51XtqbVbqeLSLAASPgpud2yfEalAP6RSKmXBLXoX62vctZw3wb2IU7KMpnQYuXRrmyIMtbSO5N1VWycvjKQNLSlN9UFmu0iUYgvPdRtelILPlGgGwSDzDCR4aK4OymWEAThatRWOANPgquXuhQJg1FCmgTaAcqxak2cFJzb+KBl34xe0lJGUz/WIklOSnShns1k8DjSe+GjnksoSR2L6urH0SX2wG9kHgcz1kxX+KUcb+rp38fL1an2bAyQ7424rQXJ1yV1FEMgsjg5SjNzPGfBjItpgMPuOEw7qxFtJ4ghtMYJFx0qKEE4I6p+Dwm/r8MSDHvYDNTYfxamkztS3qe
         AWS_REGION: 'us-west-2'   # optional: defaults to us-east-1
         SOURCE_DIR: 'Webseite'      # optional: defaults to entire repository
