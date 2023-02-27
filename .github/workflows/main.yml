@@ -16,9 +16,9 @@ jobs:
       - name: Install AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: AKIAS6NTYUEE5HNFHYK3
-          aws-secret-access-key: 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
-          aws-region: us-west-2
+          aws-access-key-id: ASIA4VT4N2G6ONG6RJEK
+          aws-secret-access-key: LgvoQXu2F7yI7hkJetE+2AhQfFESmt6vcd94+pzi
+          aws-region: us-east-1
 
       - name: Upload index.html to S3 bucket
         run: |
