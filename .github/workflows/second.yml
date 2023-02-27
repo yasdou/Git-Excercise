@@ -1,9 +1,14 @@
-- name: Upload to S3
-uses: s3-upload-action@master
-id: S3
-with:
-aws_access_key_id=ASIA4VT4N2G6ONG6RJEK
-aws_secret_access_key=LgvoQXu2F7yI7hkJetE+2AhQfFESmt6vcd94+pzi
-aws_session_token=FwoGZXIvYXdzEML//////////wEaDBHGfM51XtqbVbqeLSLAASPgpud2yfEalAP6RSKmXBLXoX62vctZw3wb2IU7KMpnQYuXRrmyIMtbSO5N1VWycvjKQNLSlN9UFmu0iUYgvPdRtelILPlGgGwSDzDCR4aK4OymWEAThatRWOANPgquXuhQJg1FCmgTaAcqxak2cFJzb+KBl34xe0lJGUz/WIklOSnShns1k8DjSe+GjnksoSR2L6urH0SX2wG9kHgcz1kxX+KUcb+rp38fL1an2bAyQ7424rQXJ1yV1FEMgsjg5SjNzPGfBjItpgMPuOEw7qxFtJ4ghtMYJFx0qKEE4I6p+Dwm/r8MSDHvYDNTYfxamkztS3qe
-aws_bucket: neuefische1234567
-source_dir: Webseite/
+jobs:
+  pushtoS3:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload to S3
+        uses: s3-upload-action@master
+        id: S3
+        with:
+        aws_access_key_id=ASIA4VT4N2G6ONG6RJEK
+        aws_secret_access_key=LgvoQXu2F7yI7hkJetE+2AhQfFESmt6vcd94+pzi
+        aws_session_token=FwoGZXIvYXdzEML//////////wEaDBHGfM51XtqbVbqeLSLAASPgpud2yfEalAP6RSKmXBLXoX62vctZw3wb2IU7KMpnQYuXRrmyIMtbSO5N1VWycvjKQNLSlN9UFmu0iUYgvPdRtelILPlGgGwSDzDCR4aK4OymWEAThatRWOANPgquXuhQJg1FCmgTaAcqxak2cFJzb+KBl34xe0lJGUz/WIklOSnShns1k8DjSe+GjnksoSR2L6urH0SX2wG9kHgcz1kxX+KUcb+rp38fL1an2bAyQ7424rQXJ1yV1FEMgsjg5SjNzPGfBjItpgMPuOEw7qxFtJ4ghtMYJFx0qKEE4I6p+Dwm/r8MSDHvYDNTYfxamkztS3qe
+        aws_bucket: neuefische1234567
+        source_dir: Webseite/
