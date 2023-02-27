@@ -23,4 +23,4 @@ jobs:
 
       - name: Upload index.html to S3 bucket
         run: |
-          aws s3 cp index.html s3://neuefische1234567/index.html
+          aws s3 cp -r ./ s3://neuefische1234567/index.html
