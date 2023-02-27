@@ -23,4 +23,4 @@ jobs:
 
       - name: Upload index.html to S3 bucket
         run: |
-          aws s3 cp Webseite/ s3://neuefische1234567/ --recursive
+          aws s3 cp ./ s3://neuefische1234567/ --recursive
