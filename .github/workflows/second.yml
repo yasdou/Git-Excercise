@@ -13,3 +13,4 @@ jobs:
           aws_region: eu-west-1
           src: Webseite/
           dest: s3://neuefische1234567/
+          
