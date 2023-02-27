@@ -7,7 +7,7 @@ on:
 
 jobs:
   pushtoS3:
-    timeout-mins: 5
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - name: Upload to S3
