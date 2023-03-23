@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: wordpress template
+
+Resources:
+myVPC:  
+  Type: AWS::EC2::VPC
+  Properties: 
+    CidrBlock: 10.0.0.0/18
+    EnableDnsHostnames: 1
+    EnableDnsSupport: 1
+    InstanceTenancy: default
+    Ipv4IpamPoolId: CidrBlock
+
+PublicSubnet:  
+  Type: AWS::EC2::Subnet
+  Properties: 
+    AvailabilityZone: us-west-2
+    CidrBlock: 10.0.1.0/24
+    MapPublicIpOnLaunch: 1
+    VpcId: 
+      Ref: myVPC
+
+MyEC2Instance: 
+  Type: AWS::EC2::Instance
+  Properties: 
+    ImageId: "ami-79fd7eee"
+    KeyName: "wordpress"
+  NetworkInterfaces: 
+      - AssociatePublicIpAddress: "true"
+        DeviceIndex: "0"
+        GroupSet: 
+          - Ref: "SGwordpress"
+        SubnetId: 
+          Ref: "PublicSubnet"
+
+SGwordpress:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupDescription: Allow http to client host
+    VpcId: 
+      Ref: myVPC
+    SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+    SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0

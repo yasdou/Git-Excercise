@@ -1,0 +1,342 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: wordpress template
+
+#add igw to vpc and routing table, add inbonud and outbound rule for ssh,
+
+Parameters:
+
+  AmazonLinuxAMIID:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+  DBName:
+    Default: MyDatabase
+    Description: MySQL database name
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+  DBUser:
+    NoEcho: 'true'
+    Description: Username for MySQL database access
+    Type: String
+    MinLength: '1'
+    MaxLength: '16'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
+  DBPassword:
+    NoEcho: 'true'
+    Description: Password for MySQL database access
+    Type: String
+    MinLength: '1'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: must contain only alphanumeric characters.
+  DBRootPassword:
+    NoEcho: 'true'
+    Description: Root password for MySQL
+    Type: String
+    MinLength: '1'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: must contain only alphanumeric characters.
+
+Resources:
+  myVPC:  
+    Type: AWS::EC2::VPC
+    Properties: 
+      CidrBlock: 10.0.0.0/18
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+      - Key: Name
+        Value: WordpressVPC
+
+  PublicSubnet:  
+    Type: AWS::EC2::Subnet
+    Properties: 
+      AvailabilityZone: us-west-2a
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      VpcId: 
+        Ref: myVPC
+      Tags:
+      - Key: Name
+        Value: WordpressPublicSubnet
+
+  MyEC2Instance: 
+    Type: AWS::EC2::Instance
+    Metadata: 
+      AWS::CloudFormation::Init
+        configSets:
+          InstallAndRun:
+            - Install
+            - Configure
+        Install:
+          packages:
+            yum:
+              mysql: []
+              mysql-server: []
+              mysql-libs: []
+              httpd: []
+              php: []
+              php-mysql: []
+          files:
+            /var/www/html/index.php:
+              content: !Join
+                - ''
+                - - |
+                    <html>
+                  - |2
+                      <head>
+                  - |2
+                        <title>AWS CloudFormation PHP Sample</title>
+                  - |2
+                        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+                  - |2
+                      </head>
+                  - |2
+                      <body>
+                  - |2
+                        <h1>Welcome to the AWS CloudFormation PHP Sample</h1>
+                  - |2
+                        <p/>
+                  - |2
+                        <?php
+                  - |2
+                          // Print out the current data and time
+                  - |2
+                          print "The Current Date and Time is: <br/>";
+                  - |2
+                          print date("g:i A l, F j Y.");
+                  - |2
+                        ?>
+                  - |2
+                        <p/>
+                  - |2
+                        <?php
+                  - |2
+                          // Setup a handle for CURL
+                  - |2
+                          $curl_handle=curl_init();
+                  - |2
+                          curl_setopt($curl_handle,CURLOPT_CONNECTTIMEOUT,2);
+                  - |2
+                          curl_setopt($curl_handle,CURLOPT_RETURNTRANSFER,1);
+                  - |2
+                          // Get the hostname of the instance from the instance metadata
+                  - |2
+                          curl_setopt($curl_handle,CURLOPT_URL,'http://169.254.169.254/latest/meta-data/public-hostname');
+                  - |2
+                          $hostname = curl_exec($curl_handle);
+                  - |2
+                          if (empty($hostname))
+                  - |2
+                          {
+                  - |2
+                            print "Sorry, for some reason, we got no hostname back <br />";
+                  - |2
+                          }
+                  - |2
+                          else
+                  - |2
+                          {
+                  - |2
+                            print "Server = " . $hostname . "<br />";
+                  - |2
+                          }
+                  - |2
+                          // Get the instance-id of the instance from the instance metadata
+                  - |2
+                          curl_setopt($curl_handle,CURLOPT_URL,'http://169.254.169.254/latest/meta-data/instance-id');
+                  - |2
+                          $instanceid = curl_exec($curl_handle);
+                  - |2
+                          if (empty($instanceid))
+                  - |2
+                          {
+                  - |2
+                            print "Sorry, for some reason, we got no instance id back <br />";
+                  - |2
+                          }
+                  - |2
+                          else
+                  - |2
+                          {
+                  - |2
+                            print "EC2 instance-id = " . $instanceid . "<br />";
+                  - |2
+                          }
+                  - '      $Database   = "'
+                  - !Ref DBName
+                  - |
+                    ";
+                  - '      $DBUser     = "'
+                  - !Ref DBUser
+                  - |
+                    ";
+                  - '      $DBPassword = "'
+                  - !Ref DBPassword
+                  - |
+                    ";
+                  - |2
+                          print "Database = " . $Database . "<br />";
+                  - |2
+                          $dbconnection = mysql_connect('localhost', $DBUser, $DBPassword, $Database)
+                  - |2
+                                          or die("Could not connect: " . mysql_error());
+                  - |2
+                          print ("Connected to $Database successfully");
+                  - |2
+                          mysql_close($dbconnection);
+                  - |2
+                        ?>
+                  - |2
+                        <h2>PHP Information</h2>
+                  - |2
+                        <p/>
+                  - |2
+                        <?php
+                  - |2
+                          phpinfo();
+                  - |2
+                        ?>
+                  - |2
+                      </body>
+                  - |
+                    </html>
+              mode: '000600'
+              owner: apache
+              group: apache
+          services:
+            sysvinit:
+              httpd:
+                enabled: 'true'
+                ensureRunning: 'true'
+    Properties: 
+      InstanceType: t3.micro
+      ImageId: !Ref AmazonLinuxAMIID
+      KeyName: "wordpress"
+      NetworkInterfaces: 
+        - AssociatePublicIpAddress: true
+          DeviceIndex: 0
+          GroupSet: 
+            - Ref: "SGwordpress"
+          SubnetId: 
+            Ref: "PublicSubnet"
+      Tags:
+      - Key: Name
+        Value: EC2Wordpress
+      UserData: !Base64 
+          'Fn::Join':
+            - ''
+            - - |
+                #!/bin/bash -xe
+              - |
+                yum install -y aws-cfn-bootstrap
+              - |
+                # Install the files and packages from the metadata
+              - '/opt/aws/bin/cfn-init -v '
+              - '         --stack '
+              - !Ref 'AWS::StackName'
+              - '         --resource WebServerInstance '
+              - '         --configsets Install '
+              - '         --region '
+              - !Ref 'AWS::Region'
+              - |+
+
+  SGwordpress:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http and ssh to client host
+      VpcId: 
+        Ref: myVPC
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      Tags:
+      - Key: Name
+        Value: SGWordpress
+
+  myNACL:
+    Type: AWS::EC2::NetworkAcl
+    Properties:
+        VpcId:
+          Ref: myVPC
+        Tags:
+        - Key: Name
+          Value: NACLWordpress
+  
+  InboundRule:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      NetworkAclId:
+        Ref: myNACL
+      RuleNumber: 100
+      Protocol: -1
+      RuleAction: allow
+      CidrBlock: 0.0.0.0/0
+      PortRange:
+        From: 22
+        To: 22
+  
+  OutboundRule:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      NetworkAclId:
+        Ref: myNACL
+      RuleNumber: 100
+      Protocol: -1
+      Egress: true
+      RuleAction: allow
+      CidrBlock: 0.0.0.0/0
+
+  myRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:  
+        Ref: myVPC
+      Tags:
+      - Key: Name
+        Value: RTWordpress
+  
+  myIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: IGW Wordpress
+  
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: myVPC
+      InternetGatewayId:
+        Ref: myIGW
+
+  myRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: myRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: myIGW
+  
+  myPublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: 
+        Ref: PublicSubnet
+      RouteTableId: 
+        Ref: myRouteTable
